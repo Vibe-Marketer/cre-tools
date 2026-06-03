@@ -17,6 +17,7 @@ const {
   vendoredBinaryPath,
   readPackageVersion,
 } = require('../scripts/platform.js');
+const { ensureBinaries } = require('../scripts/download.js');
 
 // ---------------------------------------------------------------------------
 // Binary execution
@@ -493,23 +494,44 @@ Notes:
 // Dispatch
 // ---------------------------------------------------------------------------
 
-function main() {
+/**
+ * Fetch the native binaries on first use. Commands that drive the binaries call
+ * this before running so a bun-blocked postinstall still self-heals. Exits with
+ * an actionable message if the download can't complete.
+ */
+async function ensureBinariesOrExit() {
+  try {
+    await ensureBinaries();
+  } catch (err) {
+    console.error(`cre: ${err && err.message ? err.message : String(err)}`);
+    process.exit(1);
+  }
+}
+
+async function main() {
   const argv = process.argv.slice(2);
   const cmd = argv[0];
 
   switch (cmd) {
     case 'setup':
+      // Chrome check first (fast fail), then fetch binaries, then run.
+      requireChromeOrExit();
+      await ensureBinariesOrExit();
       process.exit(commandSetup());
       break;
     case 'login':
+      await ensureBinariesOrExit();
       process.exit(commandLogin());
       break;
     case 'doctor':
     case 'status':
+      await ensureBinariesOrExit();
       process.exit(commandDoctor());
       break;
     case 'mcp':
       if (argv[1] === 'install') {
+        // mcp install references vendored binary paths — ensure they exist.
+        await ensureBinariesOrExit();
         process.exit(commandMcpInstall());
       }
       console.error(`cre: unknown mcp subcommand "${argv[1] || ''}". Did you mean \`cre mcp install\`?`);
@@ -534,4 +556,7 @@ function main() {
   }
 }
 
-main();
+main().catch((err) => {
+  console.error(`cre: ${err && err.message ? err.message : String(err)}`);
+  process.exit(1);
+});

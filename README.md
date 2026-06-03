@@ -15,8 +15,8 @@ cre setup
 
 `npm i -g github:Vibe-Marketer/cre-tools` works too — the package is plain Node with no build step.
 
-- `bun add -g` runs the postinstall, which downloads the four binaries for your platform.
-- `cre setup` checks Chrome, logs you into LoopNet + Reonomy, wires the MCP servers, and verifies the connections.
+- `bun add -g` installs the wrapper commands. Bun may block package `postinstall` scripts by default, so the binaries also download lazily on first use.
+- `cre setup` fetches the four binaries for your platform if needed, checks Chrome, logs you into LoopNet + Reonomy, wires the MCP servers, and verifies the connections.
 
 ## Install (no Node / no bun)
 
@@ -122,5 +122,5 @@ The binaries themselves are Go; this package only wraps and distributes them.
 
 ## Environment variables
 
-- `CRE_TOOLS_SKIP_DOWNLOAD=1` — skip the binary download during install (CI/dev, or to install the wrapper before a release exists).
+- `CRE_TOOLS_SKIP_DOWNLOAD=1` — skip/prevent binary download during install or first use (CI/dev, or to install the wrapper before a release exists).
 - `CRE_TOOLS_VERSION` — override the release tag the standalone `install.sh` / `install.ps1` scripts download from (defaults to `0.1.0`).

@@ -6,13 +6,26 @@
 
 const { spawn } = require('node:child_process');
 const { resolveExecutable, vendoredBinaryPath } = require('./platform.js');
+const { ensureBinaries } = require('./download.js');
 
 /**
  * Run a wrapped native binary, forwarding args, stdio, and the exit code.
- * Exits the current process with the child's exit code (or 1 on spawn error).
+ * Self-heals: if the vendored binary is missing (e.g. bun blocked postinstall),
+ * it downloads the binaries first, then execs. Exits the current process with
+ * the child's exit code (or 1 on spawn error).
  * @param {string} logicalName one of platform.BINARY_NAMES
  */
-function runShim(logicalName) {
+async function runShim(logicalName) {
+  // Fetch binaries on first use if they aren't vendored yet.
+  try {
+    await ensureBinaries({ quiet: true });
+  } catch (err) {
+    process.stderr.write(
+      `cre-tools: could not fetch the "${logicalName}" binary.\n  ${err && err.message ? err.message : String(err)}\n`
+    );
+    process.exit(1);
+  }
+
   const { command, vendored } = resolveExecutable(logicalName);
   const args = process.argv.slice(2);
 
