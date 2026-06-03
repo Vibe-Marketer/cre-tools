@@ -348,7 +348,18 @@ function extractAuthState(payload) {
     if (['not required', 'configured', 'present', 'ok', 'valid', 'authenticated'].includes(a)) {
       return true;
     }
-    if (['missing', 'expired', 'unauthorized', 'unauthenticated', 'invalid', 'required'].includes(a)) {
+    if (
+      ['missing', 'not configured', 'expired', 'unauthorized', 'unauthenticated', 'invalid', 'required'].includes(a)
+    ) {
+      return false;
+    }
+  }
+
+  // Reonomy's fresh-machine doctor can report missing auth through env_vars:
+  // "ERROR missing required: REONOMY_TOKEN".
+  if (typeof payload.env_vars === 'string') {
+    const e = payload.env_vars.toLowerCase();
+    if (e.includes('missing required') || e.includes('missing')) {
       return false;
     }
   }
