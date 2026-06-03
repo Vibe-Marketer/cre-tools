@@ -1,0 +1,38 @@
+{
+  "name": "cre-tools",
+  "version": "0.1.0",
+  "description": "Cross-platform installer/wrapper for the LoopNet + Reonomy CRE CLI toolsets. Installs prebuilt Go binaries from GitHub Releases and connects both services.",
+  "license": "MIT",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "github:Vibe-Marketer/cre-tools"
+  },
+  "bin": {
+    "cre": "./bin/cre.js",
+    "loopnet-pp-cli": "./bin/loopnet-pp-cli.js",
+    "reonomy-pp-cli": "./bin/reonomy-pp-cli.js",
+    "loopnet-pp-mcp": "./bin/loopnet-pp-mcp.js",
+    "reonomy-pp-mcp": "./bin/reonomy-pp-mcp.js"
+  },
+  "scripts": {
+    "postinstall": "node ./scripts/postinstall.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "files": [
+    "bin",
+    "scripts",
+    "README.md"
+  ]
+}
