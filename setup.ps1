@@ -8,7 +8,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$Repo = "github:Vibe-Marketer/cre-tools"
+$Repo = "github:Vibe-Marketer/cre-tools#main"
 $BunDir = Join-Path $env:USERPROFILE ".bun\bin"
 $BunExe = Join-Path $BunDir "bun.exe"
 $CreExe = Join-Path $BunDir "cre.exe"
