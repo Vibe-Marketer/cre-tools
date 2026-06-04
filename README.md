@@ -8,12 +8,24 @@ Works identically on **macOS, Linux, and Windows**.
 
 ## Install (recommended)
 
+If Bun is not installed yet:
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://bun.sh/install.ps1 | iex
+```
+
+Then install the CRE tools:
+
 ```bash
 bun add -g github:Vibe-Marketer/cre-tools
 cre setup
 ```
-
-`npm i -g github:Vibe-Marketer/cre-tools` works too — the package is plain Node with no build step.
 
 - `bun add -g` installs the wrapper commands. Bun may block package `postinstall` scripts by default, so the binaries also download lazily on first use.
 - `cre setup` fetches the four binaries for your platform if needed, checks Chrome, logs you into LoopNet + Reonomy, wires the MCP servers, and verifies the connections.
